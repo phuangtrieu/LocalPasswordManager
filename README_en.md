@@ -35,3 +35,4 @@ A serverless Progressive Web App (PWA) password manager. All your data is stored
 5. Done! Start saving your passwords safely.
 
 *(💡 **Tip:** On the main dashboard, click the 📥 **Export Config** button to download a backup file. When using a different device, just upload this backup file, enter your Master Password, and the app will automatically configure everything for you!)*
+Demo on: https://phuangtrieu.github.io/LocalPasswordManager/
