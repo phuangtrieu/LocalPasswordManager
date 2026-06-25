@@ -35,3 +35,4 @@ Một ứng dụng (PWA) quản lý mật khẩu không cần server trung gian.
 5. Xong! Bắt đầu lưu trữ mật khẩu.
 
 *(💡 **Mẹo:** Ở giao diện chính, hãy bấm nút 📥 **Xuất cấu hình** để tải file backup. Khi dùng máy khác, bạn chỉ việc chọn tải file backup này lên, nhập Master Password là ứng dụng tự động thiết lập lại mọi thứ!)*
+Demon on: https://phuangtrieu.github.io/LocalPasswordManager/
