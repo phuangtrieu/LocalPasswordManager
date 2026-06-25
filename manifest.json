@@ -1,6 +1,6 @@
 {
-    "name": "SecureVault - Password Manager",
-    "short_name": "SecureVault",
+    "name": "Password In Your Hands - Password Manager",
+    "short_name": "Password In Your Hands",
     "description": "Quản lý mật khẩu an toàn, đồng bộ qua Google Sheets",
     "start_url": "/index.html",
     "display": "standalone",

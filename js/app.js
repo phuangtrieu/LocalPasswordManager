@@ -7,6 +7,7 @@ import * as Auth from './auth.js';
 import * as Crypto from './crypto.js';
 import * as GSheets from './gsheets.js';
 import { generatePassword, getPasswordStrength } from './password-gen.js';
+import { t, initI18n } from './i18n.js';
 import {
     copyToClipboard,
     showToast,
@@ -107,13 +108,13 @@ function initSetupScreen() {
         btnImportConfig.addEventListener('click', async () => {
             const pw = importPassword.value;
             if (!pw) {
-                showToast('Vui lòng nhập Master Password để giải mã', 'warning');
+                showToast(t('toast_import_pw_req'), 'warning');
                 importPassword.focus();
                 return;
             }
 
             try {
-                showLoading('Đang giải mã...');
+                showLoading(t('toast_decrypting'));
                 const decrypted = await Crypto.decrypt(encryptedConfigData, pw);
                 const parsedConfig = JSON.parse(decrypted);
 
@@ -121,7 +122,7 @@ function initSetupScreen() {
                 if (parsedConfig.clientId) clientIdInput.value = parsedConfig.clientId;
 
                 hideLoading();
-                showToast('Đã giải mã và nhập cấu hình thành công!', 'success');
+                showToast(t('toast_import_success'), 'success');
                 
                 importPassword.value = '';
                 importPasswordContainer.classList.add('hidden');
@@ -130,7 +131,7 @@ function initSetupScreen() {
                 btnGoogleSignin.scrollIntoView({ behavior: 'smooth' });
             } catch (err) {
                 hideLoading();
-                showToast('Mật khẩu sai hoặc file không hợp lệ', 'error');
+                showToast(t('toast_import_error'), 'error');
                 importPassword.value = '';
                 importPassword.focus();
             }
@@ -143,20 +144,20 @@ function initSetupScreen() {
         const sheetUrl = sheetUrlInput.value.trim();
 
         if (!sheetUrl) {
-            showToast('Vui lòng nhập URL Google Sheet', 'warning');
+            showToast(t('toast_url_req'), 'warning');
             sheetUrlInput.focus();
             return;
         }
 
         const extractedId = GSheets.extractSheetId(sheetUrl);
         if (!extractedId) {
-            showToast('URL Google Sheet không hợp lệ', 'error');
+            showToast(t('toast_url_invalid'), 'error');
             sheetUrlInput.focus();
             return;
         }
 
         if (!clientId) {
-            showToast('Vui lòng nhập OAuth Client ID', 'warning');
+            showToast(t('toast_client_req'), 'warning');
             clientIdInput.focus();
             return;
         }
@@ -165,7 +166,7 @@ function initSetupScreen() {
 
         const initialized = GSheets.initTokenClient(clientId, async (token, error) => {
             if (error) {
-                showToast(`Lỗi đăng nhập: ${error}`, 'error');
+                showToast(`${t('toast_login_err')}${error}`, 'error');
                 googleStatus.className = 'status-badge status-error';
                 googleStatus.innerHTML = '<span class="status-dot"></span><span>Lỗi kết nối</span>';
                 return;
@@ -176,20 +177,20 @@ function initSetupScreen() {
             if (test.success) {
                 googleStatus.className = 'status-badge status-success';
                 googleStatus.innerHTML = `<span class="status-dot"></span><span>Đã kết nối: ${test.title || 'Sheet'}</span>`;
-                showToast('Đăng nhập Google thành công!', 'success');
+                showToast(t('toast_google_success'), 'success');
 
                 // Check if master password already exists
                 const hasPw = await Auth.hasMasterPassword();
                 if (hasPw) {
                     // Sheet already has master password — go to login
                     saveConfig({ sheetUrl, clientId, sheetId: extractedId });
-                    showToast('Sheet đã có master password. Chuyển sang đăng nhập.', 'info');
+                    showToast(t('toast_sheet_has_pw'), 'info');
                     setTimeout(() => showScreen('login'), 1000);
                 }
             } else {
                 googleStatus.className = 'status-badge status-error';
                 googleStatus.innerHTML = '<span class="status-dot"></span><span>Không thể truy cập Sheet</span>';
-                showToast(`Lỗi: ${test.error}`, 'error');
+                showToast(`${t('toast_conn_err')}: ${test.error}`, 'error');
             }
         });
 
@@ -211,30 +212,30 @@ function initSetupScreen() {
         const confirm = setupPasswordConfirm.value;
 
         if (!GSheets.isAuthenticated()) {
-            showToast('Vui lòng đăng nhập Google trước', 'warning');
+            showToast(t('toast_need_google'), 'warning');
             return;
         }
 
         if (!password) {
-            showToast('Vui lòng tạo master password', 'warning');
+            showToast(t('toast_create_pw_req'), 'warning');
             setupPasswordInput.focus();
             return;
         }
 
         if (password.length < 6) {
-            showToast('Master password phải có ít nhất 6 ký tự', 'warning');
+            showToast(t('toast_pw_short'), 'warning');
             setupPasswordInput.focus();
             return;
         }
 
         if (password !== confirm) {
-            showToast('Mật khẩu xác nhận không khớp', 'error');
+            showToast(t('toast_pw_mismatch'), 'error');
             setupPasswordConfirm.focus();
             return;
         }
 
         try {
-            showLoading('Đang thiết lập...');
+            showLoading(t('toast_setting_up'));
 
             await Auth.setupMasterPassword(password);
 
@@ -242,14 +243,14 @@ function initSetupScreen() {
             saveConfig({ sheetUrl, clientId, sheetId: extractedId });
 
             hideLoading();
-            showToast('Thiết lập thành công!', 'success');
+            showToast(t('toast_setup_success'), 'success');
 
             // Load entries and go to dashboard
             await loadEntries();
             showScreen('dashboard');
         } catch (err) {
             hideLoading();
-            showToast(`Lỗi thiết lập: ${err.message}`, 'error');
+            showToast(`${t('toast_setup_error')}${err.message}`, 'error');
         }
     });
 }
@@ -267,13 +268,13 @@ function initLoginScreen() {
         const password = loginPasswordInput.value;
 
         if (!password) {
-            showToast('Vui lòng nhập master password', 'warning');
+            showToast(t('toast_login_pw_req'), 'warning');
             loginPasswordInput.focus();
             return;
         }
 
         try {
-            showLoading('Đang xác thực...');
+            showLoading(t('toast_auth_checking'));
 
             // Ensure Google auth is still valid
             if (!GSheets.isAuthenticated()) {
@@ -281,11 +282,11 @@ function initLoginScreen() {
                 if (config?.clientId) {
                     // Need to re-authenticate with Google
                     hideLoading();
-                    showToast('Phiên Google đã hết hạn. Đang đăng nhập lại...', 'warning');
+                    showToast(t('toast_session_expired'), 'warning');
 
                     GSheets.initTokenClient(config.clientId, async (token, error) => {
                         if (error) {
-                            showToast(`Lỗi: ${error}`, 'error');
+                            showToast(`${t('toast_conn_err')}: ${error}`, 'error');
                             return;
                         }
                         // Retry login
@@ -300,7 +301,7 @@ function initLoginScreen() {
 
             if (!isValid) {
                 hideLoading();
-                showToast('Mật khẩu không đúng!', 'error');
+                showToast(t('toast_wrong_pw'), 'error');
                 loginPasswordInput.value = '';
                 loginPasswordInput.focus();
                 return;
@@ -308,16 +309,16 @@ function initLoginScreen() {
 
             await loadEntries();
             hideLoading();
-            showToast('Đăng nhập thành công!', 'success');
+            showToast(t('toast_login_success'), 'success');
             loginPasswordInput.value = '';
             showScreen('dashboard');
         } catch (err) {
             hideLoading();
             if (err.message === 'NO_MASTER_PASSWORD') {
-                showToast('Chưa thiết lập master password. Vui lòng setup lại.', 'error');
+                showToast(t('toast_no_pw'), 'error');
                 showScreen('setup');
             } else {
-                showToast(`Lỗi: ${err.message}`, 'error');
+                showToast(`${t('toast_conn_err')}: ${err.message}`, 'error');
             }
         }
     }
@@ -332,7 +333,7 @@ function initLoginScreen() {
         clearConfig();
         GSheets.clearAuth();
         Auth.logout();
-        showToast('Đã xóa thiết lập. Hãy cấu hình lại.', 'info');
+        showToast(t('toast_deleted_config'), 'info');
         showScreen('setup');
     });
 }
@@ -351,13 +352,13 @@ function initDashboardScreen() {
         btnExportConfig.addEventListener('click', async () => {
             const config = getConfig();
             if (!config || !config.sheetUrl || !config.clientId) {
-                showToast('Không tìm thấy cấu hình để xuất', 'error');
+                showToast(t('toast_no_config'), 'error');
                 return;
             }
 
             const masterPw = Auth.getMasterPassword();
             if (!masterPw) {
-                showToast('Chưa đăng nhập, không thể mã hóa', 'error');
+                showToast(t('toast_no_login_export'), 'error');
                 return;
             }
 
@@ -383,24 +384,24 @@ function initDashboardScreen() {
                 URL.revokeObjectURL(url);
 
                 hideLoading();
-                showToast('Đã tải xuống file cấu hình an toàn', 'success');
+                showToast(t('toast_export_success'), 'success');
             } catch (err) {
                 hideLoading();
-                showToast(`Lỗi xuất cấu hình: ${err.message}`, 'error');
+                showToast(`${t('toast_export_error')}${err.message}`, 'error');
             }
         });
     }
 
     btnRefresh.addEventListener('click', async () => {
         try {
-            showLoading('Đang đồng bộ...');
+            showLoading(t('toast_syncing'));
             await loadEntries();
             renderEntries();
             hideLoading();
-            showToast('Đã đồng bộ dữ liệu', 'success');
+            showToast(t('toast_sync_success'), 'success');
         } catch (err) {
             hideLoading();
-            showToast(`Lỗi: ${err.message}`, 'error');
+            showToast(`${t('toast_conn_err')}: ${err.message}`, 'error');
         }
     });
 
@@ -408,7 +409,7 @@ function initDashboardScreen() {
         Auth.logout();
         entries = [];
         filteredEntries = [];
-        showToast('Đã đăng xuất', 'info');
+        showToast(t('toast_logout'), 'info');
         showScreen('login');
     });
 
@@ -510,17 +511,17 @@ function initAddScreen() {
         const password = passwordInput.value;
 
         if (!website) {
-            showToast('Vui lòng nhập tên trang web', 'warning');
+            showToast(t('toast_fill_all'), 'warning');
             websiteInput.focus();
             return;
         }
         if (!username) {
-            showToast('Vui lòng nhập tài khoản', 'warning');
+            showToast(t('toast_fill_all'), 'warning');
             usernameInput.focus();
             return;
         }
         if (!password) {
-            showToast('Vui lòng nhập mật khẩu', 'warning');
+            showToast(t('toast_fill_all'), 'warning');
             passwordInput.focus();
             return;
         }
@@ -548,13 +549,13 @@ function initAddScreen() {
             filteredEntries = [...entries];
 
             hideLoading();
-            showToast('Đã lưu mật khẩu thành công!', 'success');
+            showToast(t('toast_save_success'), 'success');
             clearAddForm();
             renderEntries();
             showScreen('dashboard');
         } catch (err) {
             hideLoading();
-            showToast(`Lỗi lưu: ${err.message}`, 'error');
+            showToast(`${t('toast_save_error')}${err.message}`, 'error');
         }
     });
 }
@@ -639,7 +640,7 @@ function renderEntries() {
                     <span class="entry-website-name">${escapeHtml(formatWebsite(entry.website))}</span>
                 </div>
                 <div class="entry-actions">
-                    <button class="btn-icon btn-danger-icon" onclick="window.app.confirmDelete('${entry.id}')" title="Xóa">
+                    <button class="btn-icon btn-danger-icon" onclick="window.app.confirmDelete('${entry.id}')" title="${t('title_delete')}">
                         🗑️
                     </button>
                 </div>
@@ -651,7 +652,7 @@ function renderEntries() {
                         <span class="entry-field-value">${escapeHtml(entry.username)}</span>
                     </div>
                     <div class="entry-field-actions">
-                        <button class="btn-icon" onclick="window.app.copyField('${escapeAttr(entry.username)}', 'tài khoản')" title="Sao chép">
+                        <button class="btn-icon" onclick="window.app.copyField('${escapeAttr(entry.username)}', 'tài khoản')" title="${t('title_copy')}">
                             📋
                         </button>
                     </div>
@@ -662,13 +663,13 @@ function renderEntries() {
                         <span class="entry-field-value password-hidden" id="pw-${entry.id}">••••••••</span>
                     </div>
                     <div class="entry-field-actions">
-                        <button class="btn-icon" onclick="window.app.toggleEncrypted('${entry.id}')" title="Hiện mã hóa">
+                        <button class="btn-icon" onclick="window.app.toggleEncrypted('${entry.id}')" title="${t('title_show_enc')}">
                             👁️
                         </button>
-                        <button class="btn-icon" onclick="window.app.unlockPassword('${entry.id}')" title="Giải mã - cần master password">
+                        <button class="btn-icon" onclick="window.app.unlockPassword('${entry.id}')" title="${t('title_decrypt')}">
                             🔓
                         </button>
-                        <button class="btn-icon" onclick="window.app.copyField('${escapeAttr(entry.password)}', 'mật khẩu')" title="Sao chép">
+                        <button class="btn-icon" onclick="window.app.copyField('${escapeAttr(entry.password)}', 'mật khẩu')" title="${t('title_copy')}">
                             📋
                         </button>
                     </div>
@@ -751,7 +752,7 @@ function showUnlockModal(entryId) {
     async function doUnlock() {
         const inputPw = passwordInput.value;
         if (!inputPw) {
-            showToast('Vui lòng nhập master password', 'warning');
+            showToast(t('toast_login_pw_req'), 'warning');
             passwordInput.focus();
             return;
         }
@@ -769,7 +770,7 @@ function showUnlockModal(entryId) {
                 el.dataset.state = 'decrypted';
             }
             modal.classList.add('hidden');
-            showToast('Đã giải mã mật khẩu', 'success');
+            showToast(t('toast_decrypted'), 'success');
 
             // Auto-hide after 30 seconds for security
             setTimeout(() => {
@@ -781,7 +782,7 @@ function showUnlockModal(entryId) {
                 }
             }, 30000);
         } catch (err) {
-            showToast('Master password không đúng!', 'error');
+            showToast(t('toast_wrong_pw'), 'error');
             passwordInput.value = '';
             passwordInput.focus();
         }
@@ -830,7 +831,7 @@ async function deleteEntry(entryId) {
     if (!entry) return;
 
     try {
-        showLoading('Đang xóa...');
+        showLoading(t('toast_deleting'));
 
         // We need to find the current row index by re-fetching
         const rows = await GSheets.fetchAllRows();
@@ -844,7 +845,7 @@ async function deleteEntry(entryId) {
 
         if (rowIndex === -1) {
             hideLoading();
-            showToast('Không tìm thấy entry trên Sheet', 'error');
+            showToast(t('toast_delete_error'), 'error');
             return;
         }
 
@@ -856,10 +857,10 @@ async function deleteEntry(entryId) {
         renderEntries();
 
         hideLoading();
-        showToast('Đã xóa thành công', 'success');
+        showToast(t('toast_delete_success'), 'success');
     } catch (err) {
         hideLoading();
-        showToast(`Lỗi xóa: ${err.message}`, 'error');
+        showToast(`${t('toast_delete_error')}${err.message}`, 'error');
     }
 }
 
@@ -938,7 +939,7 @@ window.app = {
 // Initialization
 // ============================================
 async function init() {
-    // Init all screen handlers
+    initI18n();
     initPasswordToggles();
     initSetupScreen();
     initLoginScreen();
@@ -973,10 +974,10 @@ async function init() {
         // When user tries to login, they'll be prompted to re-auth with Google
         GSheets.initTokenClient(config.clientId, (token, error) => {
             if (error) {
-                showToast('Đăng nhập Google thất bại. Hãy thử lại.', 'error');
+                showToast(t('toast_login_err'), 'error');
                 return;
             }
-            showToast('Đã kết nối Google thành công', 'success');
+            showToast(t('toast_google_success'), 'success');
         });
     }
 }

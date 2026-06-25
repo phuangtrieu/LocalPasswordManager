@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="SecureVault - Ứng dụng quản lý mật khẩu an toàn, mã hóa và đồng bộ qua Google Sheets">
+    <meta name="description" content="Password In Your Hands - Ứng dụng quản lý mật khẩu an toàn, mã hóa và đồng bộ qua Google Sheets">
     <meta name="theme-color" content="#0a0e1a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>SecureVault — Password Manager</title>
+    <title>Password In Your Hands — Password Manager</title>
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -26,6 +26,14 @@
 </head>
 <body>
 
+    <div class="lang-toggle-container">
+        <div class="lang-toggle">
+            <button class="lang-btn" data-lang="vi">VI</button>
+            <div class="lang-divider"></div>
+            <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+    </div>
+
     <!-- ============================================
          SCREEN 1: SETUP (First-time configuration)
          ============================================ -->
@@ -33,54 +41,54 @@
         <div class="screen-content">
             <div class="logo-container">
                 <div class="logo-icon">🔐</div>
-                <h1>SecureVault</h1>
-                <p class="subtitle">Quản lý mật khẩu an toàn</p>
+                <h1 data-i18n="app_name">Password In Your Hands</h1>
+                <p class="subtitle" data-i18n="app_subtitle">Quản lý mật khẩu an toàn</p>
             </div>
 
             <div class="card">
-                <h2>Thiết lập ban đầu</h2>
+                <h2 data-i18n="setup_title">Thiết lập ban đầu</h2>
 
                 <!-- Import Config Section -->
                 <div class="setup-step" style="border-color: var(--accent-cyan); background: rgba(0, 230, 255, 0.05);">
                     <div class="step-header">
                         <span class="step-number" style="background: var(--accent-cyan); color: #000;">📥</span>
-                        <span>Khôi phục từ file (Tùy chọn)</span>
+                        <span data-i18n="setup_import_title">Khôi phục từ file (Tùy chọn)</span>
                     </div>
                     <div class="input-group">
-                        <label for="import-file">Tải lên file securevault-config.json</label>
+                        <label for="import-file" data-i18n="setup_import_label">Tải lên file securevault-config.json</label>
                         <input type="file" id="import-file" accept=".json" class="file-input">
                     </div>
                     <div id="import-password-container" class="input-group hidden">
-                        <label for="import-password">Nhập Master Password để giải mã</label>
+                        <label for="import-password" data-i18n="setup_import_pw_label">Nhập Master Password để giải mã</label>
                         <div class="input-with-toggle">
-                            <input type="password" id="import-password" placeholder="Mật khẩu của file sao lưu">
-                            <button type="button" class="btn-toggle-pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                            <input type="password" id="import-password" data-i18n-ph="setup_import_pw_placeholder" placeholder="Mật khẩu của file sao lưu">
+                            <button type="button" class="btn-toggle-pw" title="Hiện/Ẩn mật khẩu" data-i18n-title="title_toggle_pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
                         </div>
-                        <button id="btn-import-config" class="btn btn-primary btn-full mt-16">
+                        <button id="btn-import-config" class="btn btn-primary btn-full mt-16" data-i18n="btn_import">
                             🔓 Giải mã & Điền cấu hình
                         </button>
                     </div>
                 </div>
 
                 <div class="text-center mt-16 mb-16">
-                    <span class="text-muted">Hoặc nhập thủ công:</span>
+                    <span class="text-muted" data-i18n="setup_or_manual">Hoặc nhập thủ công:</span>
                 </div>
 
                 <!-- Step 1: Google Sheet URL -->
                 <div class="setup-step">
                     <div class="step-header">
                         <span class="step-number">1</span>
-                        <span>Kết nối Google Sheet</span>
+                        <span data-i18n="setup_step1">Kết nối Google Sheet</span>
                     </div>
                     <div class="input-group">
-                        <label for="sheet-url">URL Google Sheet</label>
-                        <input type="url" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/...">
-                        <span class="input-hint">Dán đường dẫn Google Sheet mà bạn đã tạo</span>
+                        <label for="sheet-url" data-i18n="setup_sheet_url">URL Google Sheet</label>
+                        <input type="url" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/... ">
+                        <span class="input-hint" data-i18n="setup_sheet_url_hint">Dán đường dẫn Google Sheet mà bạn đã tạo</span>
                     </div>
                     <div class="input-group">
-                        <label for="client-id">OAuth Client ID</label>
+                        <label for="client-id" data-i18n="setup_client_id">OAuth Client ID</label>
                         <input type="text" id="client-id" placeholder="xxxxxxxx.apps.googleusercontent.com">
-                        <span class="input-hint">Tạo tại <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color: var(--accent-cyan);">Google Cloud Console</a></span>
+                        <span class="input-hint" data-i18n="setup_client_id_hint">Tạo tại <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color: var(--accent-cyan);">Google Cloud Console</a></span>
                     </div>
                 </div>
 
@@ -88,9 +96,9 @@
                 <div class="setup-step">
                     <div class="step-header">
                         <span class="step-number">2</span>
-                        <span>Đăng nhập Google</span>
+                        <span data-i18n="setup_step2">Đăng nhập Google</span>
                     </div>
-                    <button id="btn-google-signin" class="btn btn-google">
+                    <button id="btn-google-signin" class="btn btn-google" data-i18n="btn_google">
                         <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -101,7 +109,7 @@
                     </button>
                     <div id="google-status" class="status-badge status-success hidden">
                         <span class="status-dot"></span>
-                        <span>Đã kết nối</span>
+                        <span data-i18n="status_connected">Đã kết nối</span>
                     </div>
                 </div>
 
@@ -109,20 +117,20 @@
                 <div class="setup-step">
                     <div class="step-header">
                         <span class="step-number">3</span>
-                        <span>Tạo Master Password</span>
+                        <span data-i18n="setup_step3">Tạo Master Password</span>
                     </div>
                     <div class="input-group">
-                        <label for="setup-master-pw">Master Password</label>
+                        <label for="setup-master-pw" data-i18n="setup_master_pw">Master Password</label>
                         <div class="input-with-toggle">
-                            <input type="password" id="setup-master-pw" placeholder="Nhập mật khẩu chính">
-                            <button type="button" class="btn-toggle-pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                            <input type="password" id="setup-master-pw" data-i18n-ph="setup_master_pw_ph" placeholder="Nhập mật khẩu chính">
+                            <button type="button" class="btn-toggle-pw" title="Hiện/Ẩn mật khẩu" data-i18n-title="title_toggle_pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="setup-master-pw-confirm">Xác nhận Master Password</label>
+                        <label for="setup-master-pw-confirm" data-i18n="setup_master_pw_confirm">Xác nhận Master Password</label>
                         <div class="input-with-toggle">
-                            <input type="password" id="setup-master-pw-confirm" placeholder="Nhập lại mật khẩu chính">
-                            <button type="button" class="btn-toggle-pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                            <input type="password" id="setup-master-pw-confirm" data-i18n-ph="setup_master_pw_confirm_ph" placeholder="Nhập lại mật khẩu chính">
+                            <button type="button" class="btn-toggle-pw" title="Hiện/Ẩn mật khẩu" data-i18n-title="title_toggle_pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
                         </div>
                     </div>
                     <div class="strength-meter" id="setup-strength">
@@ -133,7 +141,7 @@
                     </div>
                 </div>
 
-                <button id="btn-complete-setup" class="btn btn-primary btn-full mt-8">
+                <button id="btn-complete-setup" class="btn btn-primary btn-full mt-8" data-i18n="btn_complete_setup">
                     🚀 Bắt đầu sử dụng
                 </button>
             </div>
@@ -147,25 +155,25 @@
         <div class="screen-content">
             <div class="logo-container">
                 <div class="logo-icon">🔐</div>
-                <h1>SecureVault</h1>
-                <p class="subtitle">Nhập mật khẩu để tiếp tục</p>
+                <h1 data-i18n="app_name">Password In Your Hands</h1>
+                <p class="subtitle" data-i18n="login_subtitle">Nhập mật khẩu để tiếp tục</p>
             </div>
 
             <div class="card">
                 <div class="input-group">
-                    <label for="login-password">Master Password</label>
+                    <label for="login-password" data-i18n="login_pw_label">Master Password</label>
                     <div class="input-with-toggle">
-                        <input type="password" id="login-password" placeholder="Nhập master password" autofocus>
-                        <button type="button" class="btn-toggle-pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                        <input type="password" id="login-password" data-i18n-ph="login_pw_ph" placeholder="Nhập master password" autofocus>
+                        <button type="button" class="btn-toggle-pw" title="Hiện/Ẩn mật khẩu" data-i18n-title="title_toggle_pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
                     </div>
                 </div>
 
-                <button id="btn-login" class="btn btn-primary btn-full mt-16">
+                <button id="btn-login" class="btn btn-primary btn-full mt-16" data-i18n="btn_login">
                     🔓 Đăng nhập
                 </button>
 
                 <div class="text-center mt-16">
-                    <button id="btn-reset-setup" class="btn-text">
+                    <button id="btn-reset-setup" class="btn-text" data-i18n="btn_reset">
                         ⚙️ Thiết lập lại
                     </button>
                 </div>
@@ -179,16 +187,16 @@
     <div id="dashboard-screen" class="screen hidden">
         <div class="screen-content">
             <div class="dashboard-header">
-                <h1>🔑 Mật khẩu của tôi</h1>
+                <h1 data-i18n="dash_title">🔑 Mật khẩu của tôi</h1>
                 <div class="header-actions">
-                    <button id="btn-export-config" class="btn-icon" title="Xuất cấu hình (Backup)">📥</button>
-                    <button id="btn-refresh" class="btn-icon" title="Đồng bộ lại">🔄</button>
-                    <button id="btn-logout" class="btn-icon" title="Đăng xuất">🚪</button>
+                    <button id="btn-export-config" class="btn-icon" title="Xuất cấu hình (Backup)" data-i18n-title="title_export">📥</button>
+                    <button id="btn-refresh" class="btn-icon" title="Đồng bộ lại" data-i18n-title="title_refresh">🔄</button>
+                    <button id="btn-logout" class="btn-icon" title="Đăng xuất" data-i18n-title="title_logout">🚪</button>
                 </div>
             </div>
 
             <div class="search-container">
-                <input type="search" id="search-input" placeholder="🔍 Tìm kiếm trang web, tài khoản...">
+                <input type="search" id="search-input" data-i18n-ph="search_ph" placeholder="🔍 Tìm kiếm trang web, tài khoản...">
             </div>
 
             <div id="entries-list" class="entries-list">
@@ -197,11 +205,11 @@
 
             <div id="empty-state" class="empty-state hidden">
                 <div class="empty-icon">📭</div>
-                <p>Chưa có mật khẩu nào</p>
-                <p class="text-muted">Nhấn nút + để thêm mật khẩu đầu tiên</p>
+                <p data-i18n="empty_title">Chưa có mật khẩu nào</p>
+                <p class="text-muted" data-i18n="empty_subtitle">Nhấn nút + để thêm mật khẩu đầu tiên</p>
             </div>
 
-            <button id="fab-add" class="fab" title="Thêm mật khẩu mới">
+            <button id="fab-add" class="fab" title="Thêm mật khẩu mới" data-i18n-title="title_add">
                 <span>+</span>
             </button>
         </div>
@@ -213,33 +221,33 @@
     <div id="add-screen" class="screen hidden">
         <div class="screen-content">
             <div class="add-header">
-                <button id="btn-back" class="btn-icon" title="Quay lại">←</button>
-                <h1>Thêm mật khẩu</h1>
+                <button id="btn-back" class="btn-icon" title="Quay lại" data-i18n-title="title_back">←</button>
+                <h1 data-i18n="add_title">Thêm mật khẩu</h1>
             </div>
 
             <div class="card">
                 <div class="input-group">
-                    <label for="add-website">Trang web / Dịch vụ</label>
-                    <input type="text" id="add-website" placeholder="vd: google.com, facebook.com">
+                    <label for="add-website" data-i18n="add_website">Trang web / Dịch vụ</label>
+                    <input type="text" id="add-website" data-i18n-ph="add_website_ph" placeholder="vd: google.com, facebook.com">
                 </div>
 
                 <div class="input-group">
-                    <label for="add-username">Tài khoản</label>
-                    <input type="text" id="add-username" placeholder="vd: email@gmail.com">
+                    <label for="add-username" data-i18n="add_username">Tài khoản</label>
+                    <input type="text" id="add-username" data-i18n-ph="add_username_ph" placeholder="vd: email@gmail.com">
                 </div>
 
                 <div class="input-group">
-                    <label for="add-password">Mật khẩu</label>
+                    <label for="add-password" data-i18n="add_password">Mật khẩu</label>
                     <div class="input-with-actions">
                         <div class="input-with-toggle">
-                            <input type="password" id="add-password" placeholder="Nhập hoặc tạo ngẫu nhiên">
-                            <button type="button" class="btn-toggle-pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
+                            <input type="password" id="add-password" data-i18n-ph="add_password_ph" placeholder="Nhập hoặc tạo ngẫu nhiên">
+                            <button type="button" class="btn-toggle-pw" title="Hiện/Ẩn mật khẩu" data-i18n-title="title_toggle_pw" aria-label="Hiện/Ẩn mật khẩu">👁️</button>
                         </div>
                         <div class="input-action-row">
-                            <button id="btn-generate" class="btn btn-secondary btn-sm" style="flex:1">
+                            <button id="btn-generate" class="btn btn-secondary btn-sm" style="flex:1" data-i18n="btn_gen_pw">
                                 🎲 Tạo ngẫu nhiên
                             </button>
-                            <button id="btn-copy-new-pw" class="btn btn-secondary btn-sm" style="flex:1">
+                            <button id="btn-copy-new-pw" class="btn btn-secondary btn-sm" style="flex:1" data-i18n="btn_copy">
                                 📋 Sao chép
                             </button>
                         </div>
@@ -248,7 +256,7 @@
 
                 <div id="gen-options" class="gen-options">
                     <div class="input-group">
-                        <label>Độ dài: <span id="gen-length-value">16</span></label>
+                        <label><span data-i18n="gen_len">Độ dài: </span><span id="gen-length-value">16</span></label>
                         <input type="range" id="gen-length" min="8" max="64" value="16">
                     </div>
                     <div class="checkbox-group">
@@ -266,7 +274,7 @@
                     <span class="strength-label"></span>
                 </div>
 
-                <button id="btn-save" class="btn btn-primary btn-full mt-24">
+                <button id="btn-save" class="btn btn-primary btn-full mt-24" data-i18n="btn_save">
                     💾 Lưu mật khẩu
                 </button>
             </div>
@@ -278,14 +286,14 @@
          ============================================ -->
     <div id="unlock-modal" class="modal-overlay hidden">
         <div class="modal">
-            <h3>🔓 Giải mã mật khẩu</h3>
-            <p>Nhập Master Password để xem mật khẩu cho <strong id="unlock-modal-website"></strong></p>
+            <h3 data-i18n="modal_unlock_title">🔓 Giải mã mật khẩu</h3>
+            <p><span data-i18n="modal_unlock_desc">Nhập Master Password để xem mật khẩu cho </span><strong id="unlock-modal-website"></strong></p>
             <div class="input-group">
-                <input type="password" id="unlock-master-pw" placeholder="Nhập master password">
+                <input type="password" id="unlock-master-pw" data-i18n-ph="modal_unlock_ph" placeholder="Nhập master password">
             </div>
             <div class="modal-actions mt-16">
-                <button id="btn-cancel-unlock" class="btn btn-secondary">Hủy</button>
-                <button id="btn-confirm-unlock" class="btn btn-primary">Xác nhận</button>
+                <button id="btn-cancel-unlock" class="btn btn-secondary" data-i18n="btn_cancel">Hủy</button>
+                <button id="btn-confirm-unlock" class="btn btn-primary" data-i18n="btn_confirm">Xác nhận</button>
             </div>
         </div>
     </div>
@@ -295,11 +303,11 @@
          ============================================ -->
     <div id="delete-modal" class="modal-overlay hidden">
         <div class="modal">
-            <h3>⚠️ Xác nhận xóa</h3>
-            <p>Bạn có chắc muốn xóa mật khẩu cho <strong id="delete-modal-website"></strong>? Hành động này không thể hoàn tác.</p>
+            <h3 data-i18n="modal_delete_title">⚠️ Xác nhận xóa</h3>
+            <p><span data-i18n="modal_delete_desc">Bạn có chắc muốn xóa mật khẩu này? Hành động này không thể hoàn tác.</span> <strong id="delete-modal-website"></strong></p>
             <div class="modal-actions">
-                <button id="btn-cancel-delete" class="btn btn-secondary">Hủy</button>
-                <button id="btn-confirm-delete" class="btn btn-danger">Xóa</button>
+                <button id="btn-cancel-delete" class="btn btn-secondary" data-i18n="btn_cancel">Hủy</button>
+                <button id="btn-confirm-delete" class="btn btn-danger" data-i18n="btn_delete">Xóa</button>
             </div>
         </div>
     </div>
