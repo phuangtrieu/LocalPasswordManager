@@ -2,7 +2,7 @@
    Service Worker — SecureVault PWA
    ============================================ */
 
-const CACHE_NAME = 'securevault-v1';
+const CACHE_NAME = 'piyh-v2';
 const ASSETS_TO_CACHE = [
     '/index.html',
     '/css/style.css',
@@ -12,6 +12,7 @@ const ASSETS_TO_CACHE = [
     '/js/gsheets.js',
     '/js/password-gen.js',
     '/js/utils.js',
+    '/js/i18n.js',
     '/manifest.json',
 ];
 
